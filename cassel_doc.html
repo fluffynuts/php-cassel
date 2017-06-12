@@ -1,0 +1,305 @@
+<html>
+<title>Cassel Class documentation</title>
+<style>
+<!-- style for documentation <<< -->
+html {
+	background-color: #aaaaaa;
+}
+body {
+	color: #000000;
+	background-color: #aaaaaa;
+	font-family: verdana, helvetica, arial;
+	font-size: 10px;
+}
+h3 {
+	text-align: center;
+}
+div.shead {
+	color: #000000;
+	border: 1px solid #555555;
+	font-weight: bold;
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 5px;
+}
+div.section {
+	color: #000000;
+	background-color: #9999aa;
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 5px;
+	margin-bottom: 15px;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+	padding-top: 1px;
+}
+div.codeblock {
+	color: #000000;
+	background-color: #bbbbbb;
+	padding: 5px;
+	border: 1px solid black;
+	margin: 25px;
+	padding: 10px;
+}
+th {
+	background-color: #888888;
+	color: #000000;
+}
+td {
+	font-family: verdana, helvetica, arial;
+	vertical-align: top;
+	font-size: 10px;
+	border: 1px solid #bbbbbb;
+}
+p {
+	text-align: justify;
+}
+</style>
+<!-- >>> -->
+</head>
+<body>
+<h3>Cassel Class documentation</h3>
+<div class="shead">What is this?</div>
+<!--  <<< -->
+<div class="section"><p>
+This is a simple (yes, quite simple) PHP class to create N-Tier cascading
+select inputs which act on the client side. 
+Basically, you can have as many selects as you like, with as 
+many dependancies between them as you like -- the onus is on you, of course,
+to prevent cyclic action between selects that are set as parents of each other
+in your code. But apart from being careful there, you really just have to 
+create the selects that you want, with the control structure that you want.
+And you only have to use the class for parent (driving) selects: child (driven)
+selects can be created in the normal way, in html.
+</div>
+<!-- >>> -->
+<div class="shead">but why?</div>
+<!-- <<< -->
+<div class="section"><p>
+I wanted to be able to create N-tier cascading selects (basically, I didn't
+want a restriction on how many tiers in the cascading process could be
+required), and I wanted to allow for a select to drive more than one child
+select. Also, I wanted the interface to be relatively simple. I think I've 
+acheived these aims, with the proviso that, whilst the interface is quite
+simple and intuitive, you do need to keep track of your code, as there are
+a few levels of nesting within arrays. You have been warned.
+</div>
+<!-- >>> -->
+<div class="shead">About style and other such things</div>
+<!-- <<< -->
+<div class="section"><p>
+	I tend to do just about all of my coding in VIM. Actually, I stick to using
+	the graphical version (GVIM), but sometimes make short trips to the land
+	of the console. My reasons are simple: I need a uniform development 
+	environment on win32 and linux (because I'm forced to use the first, and
+	I love to use the second), and I needed something powerful, yet simple
+	and, quite importantly, free. Not just free as in beer -- free as in
+	licensing. I believe that the days of closed-source applications are
+	over. Commercial apps can still be written: a coder has to eat and feed
+	his wife and all that. But your clients deserve disclosure on the source, 
+	should you be abducted by aliens or something similar. Or even just so they
+	can also hire a hacker to implement features you didn't think of. But
+	enough of that.</p>
+	<p>Also, whilst VIM may give an initially steep learning curve, and
+	seem to contain unnecessary keyboard work, you will find that other
+	editors become annoying after you find the true power in vim. Also, very
+	few other editors are as ready to adapt to the coder's wishes.</p>
+	<p>The point is that you might notice a few commented out &lt;&lt;&lt;'s
+	and corresponding &gt;&gt;&gt;'s. This is not an angle-bracket fetish: it's
+	my choice for fold markers in vim (thanks to a friend) because curly braces
+	cause problems in Tcl (even when commented), and tend to mess up the
+	brace-matching for languages that use braces for code blocks, since
+	vim cannot always tell what is a code brace, and what is a fold brace.
+	You also might notice that I tend to stick to an 80 column line. This can
+	make some sections of deep code a little short on space, but it's something
+	I do as a matter of style (thanks to the same friend). It makes for
+	easier reading on a terminal, and means that the code is more easily
+	available to anyone who has time to waste on it.</p>
+</div>
+<!-- >>> -->
+<div class="shead">Usage</div>
+<!-- <<< -->
+<div class="section">
+<p>
+Usage is quite simple. You can instantiate the class with an array of
+elements that will be assigned to member elements of the class at the time
+of construction, or you can do it all step-by-step, assigning member
+variables as you see fit. When you have the select set up to your requirements,
+you just have to call on the render() member function to create an output.
+</p>
+<p>
+The select object has the following settable member values:
+<table>
+<tr>
+	<th>Name</th><th>Description</th><th>Default</th>
+</tr>
+<tr>
+	<td>id</td>
+	<td>id of the element created in html. Must be unique if you want to 
+		avoid oddities</td>
+	<td>left as a blank string -- you must set this, otherwise cascading
+		will not work</td>
+</tr>
+<tr>
+	<td>name</td>
+	<td>name of the element created in html, and, of course, name of the
+		resultant value in the page receiving this form's information.</td>
+	<td>set to the id of the select</td>
+</tr>
+<tr>
+	<td>style</td>
+	<td>Valid CSS style string -- if there is no colon (:) in the string, it
+		is assumed to be a CSS class name, if non-blank</td>
+	<td>left blank -- default page style rules</td>
+</tr>
+<tr>
+	<td>sel_idx</td>
+	<td>Index of initial selection. The index is taken as the value you set
+		for an option</td>
+	<td>left blank</td>
+</tr>
+<tr>
+	<td>sel_val</td>
+	<td>Value of initial selection. Actually, this is the textural
+		representation of the option item you want selected; ie the value
+		that the user sees</td>
+	<td>left blank</td>
+</tr>
+<tr>
+	<td>set_on_start</td>
+	<td>boolean value which determines whether or not the javascript cascade
+		functions for Cassel items are run when the page is loaded, to make
+		sure that child items are properly populated.</td>
+	<td>True (ie the functions are run)</td>
+</tr>
+<tr>
+	<td>cascades</td>
+	<td>Cascade definitions. These are explained below</td>
+	<td>left blank</td>
+</tr>
+<tr>
+	<td>defaults</td>
+	<td>Default values for child selects. This is a nested array</td>
+	<td>left blank</td>
+</tr>
+</table>
+Note that all of these items can be set in an array (using the same name as the
+member function) passed to the constructor; eg:
+<div class="codeblock">
+$foo = new Cassel(array(<br>
+"id" => "myid",<br>
+...
+));
+</div>
+</p>
+<p>
+Cascade definitions decide not only what the cascading rules are, but also the
+contents of this Cassel object's output select item. The format is, quite
+simply:
+<div class="codeblock">
+[01]&nbsp;$cascades = array(<br>
+[02]&nbsp;&nbsp;&quot;option_value0&quot; => array(<br>
+[03]&nbsp;&nbsp;&nbsp;&quot;option_text0&quot; => array(<br>
+[04]&nbsp;&nbsp;&nbsp;&nbsp;&quot;childid0&quot;=> array(<br>
+[05]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;child_option_value0&quot; => &quot;child_option_text0&quot;<br>
+[06]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+[07]&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+[08]&nbsp;&nbsp;&nbsp;),<br>
+[09]&nbsp;&nbsp;),<br>
+[10]&nbsp;&nbsp;&quot;option_value1&quot; => &quot;option_text2&quot;,<br>
+[11]&nbsp;&nbsp;&quot;__default__&quot; => array(<br>
+[12]&nbsp;&nbsp;&nbsp;&quot;childid1&quot; => array(<br>
+[13]&nbsp;&nbsp;&nbsp;&nbsp;&quot;&quot;child_option_value1&quot; => &quot;child_option_text1&quot;,<br>
+[14]&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+[15]&nbsp;&nbsp;&nbsp;),<br>
+[16]&nbsp;&nbsp;),<br>
+[17]&nbsp;&nbsp;&quot;
+...<br>
+);<br>
+</div>
+Although, that might not look so simple! But it really is quite logical. Let's
+examine what we have there...
+<p>Lines 01 to 09 define a standard sort of cascade. The Cassel object gets
+an option with the value &quot;option_value0&quot; and the text 
+&quot;option_text0&quot;, and all children listed with child ids as sub-arrays
+of that text get the option lists defined in them when &quot;option_value0&quot;
+is selected by the user. In this case, the select with the id child0 will
+have the array defined in lines 04 to 06 as the option list when the user 
+selects &quot;option_text0&quot; from the list.
+</p>
+<p>Line 10 describes a standard entry for the Cassel select object. This entry
+just creates the option in the select, and doesn't have any implicit cascading
+actions. But hang on, what's next?</p?
+<p>Lines 11 to 17 define what is to be done for items in the Cassel options
+array that do not have implicit cascading functionality set. The name
+&quot;__default__&quot; is not hard-coded: you can change it with the 
+member property default_name -- this is just the default value of the
+default name (if you get what I mean) so, unless you have some reson to use
+&quot;__default__&quot; in your option lists' values, you can just stick
+to how I use the default name. Anyway, you can see that the arrangement of
+the __default__ option is a little different from the regular cascade, simply
+because it doesn't have to monitor a specific value in the parent select.
+Also note that the __default__ settings do not affect the option list that 
+the Cassel object produces -- this index in the array is ignored on render.</p>
+<p>So, we see that we have a lot of flexibility at the expense of a little
+complexity in definition. But you can have a look at the test_cassel.php
+page to see the cassel object in action -- I think that a demonstration
+makes things a little clearer.</p>
+<p>I'm sure that it also becomes apparent that you can have as many levels of
+cascade as you want -- just make Cassel objects children of other Cassel 
+objects, as we see in the test page. Also, the architecture allows branching
+whereby we can have one select driving another <i>N</i> selects, which each 
+drive another <i>N</i> selects, and so on, and so on (where <i>N</i> is any
+positive integer). You can have children that drive no others (look at column
+2, the upper select, in the test page), or children that are parents to
+others (look at the lower select in column 2 on the test page). You are
+really only limited by the application you want to write  (: .
+</p>
+<p>The defaults directive in the definition you pass to the cassel object defines
+a set of default values for child select objects, and it's both quite simple and 
+optional. Basically, we have an array where the indeces are the values that we
+added into our cassel object, and each element is a description of the default
+values to apply to children when that value is selected. Note that the 
+&qout;value&quot; I'm talking about here is <b>not</b> the text of the selected
+item -- it is the actual value, which would be passed through on a form.</p>
+<p>Perhaps an example will clear things up a little. Taken from the 
+test_cassel.php page, if I wanted the cassel object with the id &quot;parent&quot;
+(which is the one on the extreme left) to ensure that the object with id
+&quot;child0&quot; (the select in the second column, at the top) to have a
+value of 103 (which is the <b>value</b> of the item in the list), I could
+set the &quot;defaults&quot; element of the definition like so:</p>
+<div class="codeblock">
+&nbsp;...<br>
+&nbsp;&quot;defaults&quot; =&gt; array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;1 =&gt; array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;child0&quot; =&gt; &quot;103&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+&nbsp;...<br>
+</div>
+<p>(In fact, that's exactly what i did do  (: ). This follows the concept:</p>
+<div class="codeblock">
+&nbsp;...<br>
+&nbsp;&quot;defaults&quot; =&gt; array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;[parent value] =&gt; array(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;[child id]&quot; =&gt; &quot;[child value or text]&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+&nbsp;...<br>
+</div>
+<p>Whilst this may seem a little more complex than you might expect, we can see
+from the definition that we could specify default values for any number of child
+selects (by adding the the child id's into the arrays for each value in the
+parent where a default selection is required on said child), and for any of the
+parent values in the cassel object (by simply adding the values as indeces of 
+child reference arrays)<p>
+<p>A side note: you may use child text-values for the matches in the child 
+definitions -- as hinted at by the [child value or text] in the generic concept<p>
+<p>Sorry if the documentation here is a little confusing or vague -- please
+check out the test_cassel.php script to see this all in action.</p>
+</div>
+<!-- >>> -->
+<p style="text-align:right">Author: Dave McColl, 2005-07-02</p>
+</body>
+</html>
